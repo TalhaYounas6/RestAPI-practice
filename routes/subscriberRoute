@@ -1,0 +1,79 @@
+const express = require("express");
+const router = express.Router();
+const subscriber = require("../model/subscriber");
+
+//get all
+router.get("/", async (req, res) => {
+  try {
+    const subscriberx = await subscriber.find();
+    res.json(subscriberx);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+//get one
+router.get("/:id", getUser, async (req, res) => {
+  res.status(200).json(res.subscriber);
+});
+
+//creating one
+router.post("/", async (req, res) => {
+  const subscriberx = new subscriber({
+    name: req.body.name,
+    subscriberToChannel: req.body.subscriberToChannel,
+  });
+  try {
+    const newSubscriber = await subscriberx.save();
+    res.status(201).json(newSubscriber);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//updating one
+router.patch("/:id", getUser, async (req, res) => {
+  if (req.body.name != null) {
+    res.subscriber.name = req.body.name;
+  }
+
+  if (req.body.subscriberToChannel != null) {
+    res.subscriber.subscriberToChannel = req.body.subscriberToChannel;
+  }
+
+  try {
+    const updatedSubscriber = await res.subscriber.save();
+    res.status(200).json(updatedSubscriber);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//deleting one
+router.delete("/:id", getUser, async (req, res) => {
+  try {
+    await res.subscriber.deleteOne();
+    res.json({ message: "Subscriber deleted" });
+
+    if (req.body.name == null) {
+      return res.status(400).json({ message: "error, no username" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+async function getUser(req, res, next) {
+  let subscriberx;
+  try {
+    subscriberx = await subscriber.findById(req.params.id);
+    if (subscriberx == null) {
+      return res.status(400).json({ message: "cannot find subscriber" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+  res.subscriber = subscriberx;
+  next();
+}
+
+module.exports = router;

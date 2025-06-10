@@ -1,0 +1,24 @@
+GET http://localhost:3000/subscriberRoute/68480c7c5b0cdcf527906507
+
+###
+
+POST  http://localhost:3000/subscriberRoute
+Content-Type: application/json
+
+{
+    "name" : "Talha",
+    "subscriberToChannel" : "Pewdiepie"
+}
+
+###
+DELETE   http://localhost:3000/subscriberRoute/684718811a0c6ffd41239c39
+
+###
+PATCH http://localhost:3000/subscriberRoute/68480c7c5b0cdcf527906507
+Content-Type: application/json
+
+{
+    "name" : "Talha Younas",
+    "subscriberToChannel" : "Lazarbeam"
+}
+
